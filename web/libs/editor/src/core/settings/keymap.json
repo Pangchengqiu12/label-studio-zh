@@ -1,0 +1,183 @@
+{
+  "audio:back": {
+    "key": "ctrl+b",
+    "mac": "command+b",
+    "description": "返回一秒钟"
+  },
+  "audio:playpause": {},
+  "ts:grow-left": {
+    "key": "left",
+    "description": "向左增加区域"
+  },
+  "ts:grow-right": {
+    "key": "right",
+    "description": "向右增加区域"
+  },
+  "ts:shrink-left": {
+    "key": "alt+left",
+    "description": "减少左侧区域"
+  },
+  "ts:shrink-right": {
+    "key": "alt+right",
+    "description": "减少右侧区域"
+  },
+  "ts:grow-left-largre": {
+    "key": "shift+left"
+  },
+  "ts:grow-right-largre": {
+    "key": "shift+right"
+  },
+  "ts:shrink-left-largre": {
+    "key": "shift+alt+left"
+  },
+  "ts:shrink-right-largre": {
+    "key": "shift+alt+right"
+  },
+  "annotation:submit": {
+    "key": "ctrl+enter",
+    "mac": "command+enter",
+    "description": "提交注释"
+  },
+  "annotation:skip": {
+    "key": "ctrl+space",
+    "mac": "alt+enter",
+    "description": "跳过"
+  },
+  "annotation:undo": {
+    "key": "ctrl+z",
+    "mac": "command+z",
+    "description": "撤消"
+  },
+  "annotation:redo": {
+    "key": "ctrl+shift+z",
+    "mac": "command+shift+z",
+    "description": "重做"
+  },
+  "polygon:undo": {
+    "key": "ctrl+z",
+    "mac": "command+z",
+    "description": "撤消"
+  },
+  "polygon:redo": {
+    "key": "ctrl+shift+z",
+    "mac": "command+shift+z",
+    "description": "重做"
+  },
+  "region:delete-all": {
+    "key": "ctrl+backspace",
+    "mac": "command+backspace",
+    "description": "删除所有区域"
+  },
+  "region:focus": {
+    "key": "enter",
+    "description": "聚焦第一个可聚焦区域"
+  },
+  "region:relation": {
+    "key": "alt+r",
+    "description": "创建区域之间的关系"
+  },
+  "region:visibility": {
+    "key": "alt+h",
+    "description": "切换选定区域的可见性"
+  },
+  "region:visibility-all": {
+    "key": "ctrl+h",
+    "mac": "ctrl+h",
+    "description": "切换所有区域的可见性"
+  },
+  "region:lock": {
+    "key": "alt+l",
+    "description": "锁定选定区域"
+  },
+  "region:meta": {
+    "key": "alt+m",
+    "description": "编辑选定区域元"
+  },
+  "region:unselect": {
+    "key": "u",
+    "description": "取消选择区域"
+  },
+  "region:exit": {
+    "key": "escape",
+    "description": "退出关系模式，取消选择区域"
+  },
+  "region:delete": {
+    "key": "backspace",
+    "description": "删除选定区域"
+  },
+  "region:cycle": {
+    "key": "alt+.",
+    "description": "区域循环"
+  },
+  "region:duplicate": {
+    "key": "ctrl+d",
+    "mac": "command+d",
+    "description": "复制选定区域"
+  },
+  "segment:delete": {
+    "key": "delete",
+    "description": "删除选定区域"
+  },
+  "media:playpause": {
+    "key": "alt+space",
+    "description": "播放/暂停"
+  },
+  "media:step-backward": {
+    "key": "alt+left",
+    "description": "后退一步"
+  },
+  "media:step-forward": {
+    "key": "alt+right",
+    "description": "前进一步"
+  },
+  "video:keyframe-backward": {
+    "key": "ctrl+alt+left",
+    "description": "转到上一个关键帧"
+  },
+  "video:keyframe-forward": {
+    "key": "ctrl+alt+right",
+    "description": "转到下一个关键帧"
+  },
+  "video:backward": {
+    "key": "alt+left",
+    "description": "返回"
+  },
+  "video:rewind": {
+    "key": "shift+ctrl+alt+left",
+    "description": "转到第一帧"
+  },
+  "video:forward": {
+    "key": "shift+alt+right",
+    "description": "前进"
+  },
+  "video:fastforward": {
+    "key": "shift+ctrl+alt+right",
+    "description": "转到最后一帧"
+  },
+  "video:hop-backward": {
+    "key": "shift+alt+left",
+    "description": "向后跳"
+  },
+  "video:hop-forward": {
+    "key": "shift+alt+right",
+    "description": "向前跳"
+  },
+  "repeater:next-page": {
+    "key": "alt+right",
+    "description": "下一页"
+  },
+  "repeater:previous-page": {
+    "key": "alt+left",
+    "description": "上一页"
+  },
+  "image:prev": {
+    "key": "ctrl+left",
+    "mac": "command+left",
+    "description": "上一张图片"
+  },
+  "image:next": {
+    "key": "ctrl+right",
+    "mac": "command+right",
+    "description": "下一张图片"
+  }
+}

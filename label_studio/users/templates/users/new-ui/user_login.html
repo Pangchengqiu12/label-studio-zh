@@ -1,0 +1,57 @@
+{% extends 'users/new-ui/user_base.html' %} {% block user_content %}
+<div class="form-wrapper">
+  <h2>登录</h2>
+  <form
+    id="login-form"
+    action="{% url 'user-login' %}{% if next %}?next={{ next }}{% endif %}"
+    method="post"
+  >
+    {% csrf_token %}
+    <div class="input-wrapper">
+      <label>邮箱账号</label>
+      <input
+        type="text"
+        class="lsf-input-ls"
+        name="email"
+        id="email"
+        value="{{ form.data.email }}"
+      />
+    </div>
+    <div class="input-wrapper">
+      <label>密码</label>
+      <input
+        type="password"
+        class="lsf-input-ls"
+        name="password"
+        id="password"
+      />
+    </div>
+    {% if form.non_field_errors %} {% for error in form.non_field_errors %}
+    <p class="error">{{ error }}</p>
+    {% endfor %} {% endif %}
+    <div class="form-group">
+      <input
+        type="checkbox"
+        id="persist_session"
+        name="persist_session"
+        class="lsf-checkbox-ls"
+        checked="checked"
+        style="width: auto"
+      />
+      <label for="persist_session">保持在此浏览器登录</label>
+    </div>
+    <button
+      type="submit"
+      aria-label="Log In"
+      class="lsf-button-ls lsf-button-ls_look_primary"
+    >
+      登录
+    </button>
+  </form>
+</div>
+{% if not settings.DISABLE_SIGNUP_WITHOUT_LINK %}
+<div class="text-wrapper">
+  <p class="">没有账户?</p>
+  <a href="{{ settings.HOSTNAME }}/user/signup">注册</a>
+</div>
+{% endif %} {% endblock %}

@@ -1,0 +1,6 @@
+{
+  "message": "chore: OPTIC-1121: Removing Vite dependencies as they are unused (#6814)",
+  "commit": "c2de35e89944400e6897bb5046d7938e884e80e9",
+  "date": "2024-12-20T15:53:26.000Z",
+  "branch": "develop"
+}

@@ -1,0 +1,7 @@
+.github/          @HumanSignal/devops
+deploy/           @HumanSignal/devops
+Dockerfile*       @HumanSignal/devops
+docker-compose*   @HumanSignal/devops
+docs/.npmignore   @hlomzik @Gondragos @nicholasrq
+docs/package.json @hlomzik @Gondragos @nicholasrq
+docs/yarn.lock    @hlomzik @Gondragos @nicholasrq
