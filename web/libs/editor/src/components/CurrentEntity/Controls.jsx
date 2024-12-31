@@ -67,7 +67,7 @@ export const Controls = controlsInjector(
         buttons.push(
           <ButtonTooltip key="skip" name="annotation:skip" title="Cancel (skip) task">
             <Button disabled={disabled} look="danger" onClick={store.skipTask}>
-              Skip
+              跳过
             </Button>
           </ButtonTooltip>,
         );
@@ -81,7 +81,7 @@ export const Controls = controlsInjector(
           <ButtonTooltip key="submit" name="annotation:submit" title={title}>
             <Elem name="tooltip-wrapper">
               <Button disabled={disabled || submitDisabled} look="primary" onClick={store.submitAnnotation}>
-                Submit
+                提交
               </Button>
             </Elem>
           </ButtonTooltip>,
@@ -92,7 +92,7 @@ export const Controls = controlsInjector(
         buttons.push(
           <ButtonTooltip key="update" name="annotation:submit" title="Update this task">
             <Button disabled={disabled || submitDisabled} look="primary" onClick={store.updateAnnotation}>
-              {sentUserGenerate || versions.result ? "Update" : "Submit"}
+              {sentUserGenerate || versions.result ? "更新" : "提交"}
             </Button>
           </ButtonTooltip>,
         );

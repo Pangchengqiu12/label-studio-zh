@@ -29,7 +29,7 @@ export const GridWidthButton = injector(({ view, gridWidth, size }) => {
 
   return view.type === "grid" ? (
     <Space style={{ fontSize: 12 }}>
-      Columns: {width}
+      列: {width}
       <Button.Group>
         <Button
           size={size}

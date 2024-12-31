@@ -113,7 +113,7 @@ export const SkipButton = memo(
             }
           }}
         >
-          Skip
+          跳过
         </Button>
       </ButtonTooltip>
     );
@@ -136,7 +136,7 @@ export const UnskipButton = memo(
             store.unskipTask();
           }}
         >
-          Cancel skip
+          取消跳过
         </Button>
       </ButtonTooltip>
     );

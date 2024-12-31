@@ -20,14 +20,14 @@ export const StorageSummary = ({ target, storage, className, storageTypes = [] }
       : 0;
 
   // help text for tasks and annotations
-  const tasks_added_help = `${last_sync_count} new tasks added during the last sync.`;
-  const tasks_total_help = `${tasks_existed} tasks that have been found and already synced will not be added to the project again.\n${
+  const tasks_added_help = `${last_sync_count} 上次同步期间添加的新任务.`;
+  const tasks_total_help = `${tasks_existed} 已找到并已同步的任务将不会再次添加到项目中.\n${
     tasks_existed + last_sync_count
-  } tasks have been added in total for this storage.`;
-  const annotations_help = `${last_sync_count} annotations successfully saved during the last sync.`;
+  } tasks have 已添加到此存储的总数.`;
+  const annotations_help = `${last_sync_count} 在上次同步期间成功保存的标记.`;
   const total_annotations_help =
     typeof storage.meta?.total_annotations !== "undefined"
-      ? `${storage.meta.total_annotations} total annotations seen in the project at the sync moment.`
+      ? `${storage.meta.total_annotations} 同步时刻在项目中看到的标记总数.`
       : "";
 
   const handleButtonClick = () => {

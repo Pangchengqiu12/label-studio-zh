@@ -66,7 +66,7 @@ export default inject("store")(
               onClick={store.skipTask}
               className={`${styles.skip} ${skipButtonClassName}`}
             >
-              Skip {buttons.skip}
+              跳过 {buttons.skip}
             </Button>
           </Tooltip>
         );
@@ -82,7 +82,7 @@ export default inject("store")(
               onClick={store.submitAnnotation}
               className={`${styles.submit} ${submitButtonClassName}`}
             >
-              Submit {buttons.submit}
+              提交 {buttons.submit}
             </Button>
           </Tooltip>
         );
@@ -98,7 +98,7 @@ export default inject("store")(
               onClick={store.updateAnnotation}
               className={updateButtonClassName}
             >
-              {sentUserGenerate || versions.result ? "Update" : "Submit"} {buttons.update}
+              {sentUserGenerate || versions.result ? "更新" : "提交"} {buttons.update}
             </Button>
           </Tooltip>
         );

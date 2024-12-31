@@ -36,14 +36,14 @@ const ToolView = observer(({ item }) => {
         icon={<IconExpand />}
         items={[
           {
-            label: "缩放到最大尺寸",
+            label: "缩放到最小尺寸",
             shortcut: "shift+1",
             onClick: () => {
               item.sizeToFit();
             },
           },
           {
-            label: "缩放到原始尺寸",
+            label: "缩放到最大尺寸",
             shortcut: "shift+2",
             onClick: () => {
               item.sizeToOriginal();

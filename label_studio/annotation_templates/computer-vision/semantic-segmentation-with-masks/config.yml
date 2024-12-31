@@ -1,6 +1,6 @@
 title: 基于掩码的语义分割
 type: community
-group: 计算机视觉
+group: 
 order: 2
 image: /static/templates/semantic-segmentation-with-masks.png
 details: <h1>Draw masks around the object with the brush tool</h1>

@@ -48,17 +48,17 @@ const ProjectSummary = summaryInjector((props) => {
     <Space size="large" style={{ paddingRight: "1em", color: "rgba(0,0,0,0.3)" }}>
       {props.cloudSync && (
         <Space size="small" style={{ fontSize: 12, fontWeight: 400, opacity: 0.8 }}>
-          Storage sync
+          同步中
           <Spinner size="small" />
         </Space>
       )}
       <span style={{ display: "flex", alignItems: "center", fontSize: 12 }}>
         <Space size="compact">
           <span>
-            Tasks: {props.totalFoundTasks} / {props.totalTasks}
+            任务: {props.totalFoundTasks} / {props.totalTasks}
           </span>
-          <span>Annotations: {props.totalAnnotations}</span>
-          <span>Predictions: {props.totalPredictions}</span>
+          <span>标记: {props.totalAnnotations}</span>
+          <span>预测: {props.totalPredictions}</span>
         </Space>
       </span>
     </Space>

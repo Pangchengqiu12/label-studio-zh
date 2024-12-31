@@ -1,6 +1,6 @@
 title: 关键点标签
 type: community
-group: 计算机视觉
+group: 
 order: 10000
 image: /static/templates/keypoints.png
 details: <h1>Click the label and then on the canvas</h1>

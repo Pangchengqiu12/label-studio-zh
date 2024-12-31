@@ -1,6 +1,6 @@
 title: 图像分类
 type: community
-group: 计算机视觉
+group: 
 image: /static/templates/image-classification.png
 details: <h1>Classify the image</h1>
 config: |

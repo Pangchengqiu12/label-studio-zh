@@ -16,9 +16,10 @@ export const DangerZone = () => {
 
   const handleOnClick = (type) => () => {
     confirm({
-      title: "Action confirmation",
-      body: "You're about to delete all things. This action cannot be undone.",
-      okText: "Proceed",
+      title: "操作确认",
+      body: "你正在删除所有事物。此操作不可逆。",
+      cancelText: "取消",
+      okText: "继续",
       buttonLook: "destructive",
       onOk: async () => {
         setProcessing(type);

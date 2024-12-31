@@ -1,6 +1,6 @@
 title: 基于多边形的语义分割
 type: community
-group: 计算机视觉
+group: 
 order: 1
 image: /static/templates/semantic-segmentation-with-polygons.png
 details: <h1>Draw a polygon around object</h1>

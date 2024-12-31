@@ -1,6 +1,6 @@
 title: 可视化问答
 type: community
-group: 计算机视觉
+group: 
 image: /static/templates/visual-question-answering.png
 details: <h1>Answer the questions related to what you see on the picture</h1>
 config: |

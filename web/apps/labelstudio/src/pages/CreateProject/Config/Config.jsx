@@ -275,12 +275,12 @@ const ConfigureColumn = ({ template, obj, columns }) => {
       updateValue(e.target.value);
     }
   };
-
+console.log(obj,222)
   return (
     <p>
-      Use {obj.tagName.toLowerCase()}
+      用{obj.tagName.toLowerCase()}
       {template.objects > 1 && ` for ${obj.getAttribute("name")}`}
-      {" from "}
+      {" 从 "}
       {columns?.length > 0 && columns[0] !== DEFAULT_COLUMN && "field "}
       <select onChange={selectValue} value={isManual ? "-" : value}>
         {columns?.map((column) => (
@@ -454,10 +454,10 @@ const Configurator = ({
 
   const extra = (
     <p className={configClass.elem("tags-link")}>
-      Configure the labeling interface with tags.
+      配置标签界面设置。
       <br />
       <a href="https://labelstud.io/tags/" target="_blank" rel="noreferrer">
-        See all available tags
+        查看所有可用标签
       </a>
       .
     </p>
@@ -471,7 +471,7 @@ const Configurator = ({
           <button type="button" data-leave={true} onClick={onBrowse}>
           浏览模板
           </button>
-          <ToggleItems items={{ code: "Code", visual: "Visual" }} active={configure} onSelect={onSelect} />
+          <ToggleItems items={{ code: "代码", visual: "视觉" }} active={configure} onSelect={onSelect} />
         </header>
         <div className={configClass.elem("editor")}>
           {configure === "code" && (
@@ -524,7 +524,7 @@ const Configurator = ({
             {saved && (
               <Block name="form-indicator">
                 <Elem tag="span" mod={{ type: "success" }} name="item">
-                  Saved!
+                  保存!
                 </Elem>
               </Block>
             )}

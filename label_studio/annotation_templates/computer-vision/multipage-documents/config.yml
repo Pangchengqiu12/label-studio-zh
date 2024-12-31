@@ -1,6 +1,6 @@
 title: 多页文档注释
 type: community
-group: 计算机视觉
+group: 
 image: /static/templates/multipage.png
 details: <h1>Annotate PDF documents</h1>
 config: |

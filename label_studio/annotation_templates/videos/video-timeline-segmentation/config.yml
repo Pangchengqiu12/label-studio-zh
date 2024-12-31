@@ -1,6 +1,6 @@
 title: 视频时间线分割
 type: community
-group: 视频
+group: 
 image: /static/templates/video-timeline-segmentation.png
 details: <h1>Select and classify video segments</h1>
 config: |

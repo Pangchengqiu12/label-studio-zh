@@ -74,12 +74,12 @@ def _create_project(title, user, label_config=None, sampling=None, description=N
 
     project = Project.objects.filter(title=title).first()
     if project is not None:
-        print('Project with title "{}" already exists'.format(title))
+        print('项目标题 "{}" 已存在'.format(title))
     else:
         org = Organization.objects.first()
         org.add_user(user)
         project = Project.objects.create(title=title, created_by=user, organization=org)
-        print('Project with title "{}" successfully created'.format(title))
+        print('项目标题 "{}" 创建成功'.format(title))
 
     if label_config is not None:
         with open(os.path.abspath(label_config)) as c:
@@ -96,7 +96,7 @@ def _create_project(title, user, label_config=None, sampling=None, description=N
 
         # e.g.: localhost:8080,localhost:8081;localhost:8082
         for url in ml_backends:
-            logger.info('Adding new ML backend %s', url)
+            logger.info('添加新的 ML 后端 %s', url)
             MLBackend.objects.create(project=project, url=url)
 
     project.save()
@@ -224,12 +224,12 @@ def _reset_password(input_args):
         return
 
     if user.check_password(password):
-        print('Entered password is the same as current')
+        print('输入的密码与当前密码相同')
         return
 
     user.set_password(password)
     user.save()
-    print('Password successfully changed')
+    print('密码已成功更改')
 
 
 def check_port_in_use(host, port):
@@ -325,9 +325,9 @@ def main():
                 serializer_context=input_args.export_serializer_context,
             )
         except Exception as e:
-            logger.exception(f'Failed to export project: {e}')
+            logger.exception(f'项目导出失败: {e}')
         else:
-            logger.info(f'Project exported successfully: {filename}')
+            logger.info(f'项目已成功导出：{filename}')
 
         return
 

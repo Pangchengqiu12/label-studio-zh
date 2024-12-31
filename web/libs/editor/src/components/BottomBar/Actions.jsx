@@ -38,7 +38,7 @@ export const Actions = ({ store }) => {
         <Button
           icon={<LsSettingsAlt />}
           type="text"
-          aria-label="Settings"
+          aria-label="设置"
           onClick={() => store.toggleSettings()}
           style={{
             height: 36,

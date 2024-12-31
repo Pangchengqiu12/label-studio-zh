@@ -1,6 +1,6 @@
 title: 图像字幕
 type: community
-group: 计算机视觉
+group: 
 image: /static/templates/image-captioning.png
 details: <h1>Write text describing the image</h1>
 config: |

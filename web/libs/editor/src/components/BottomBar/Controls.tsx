@@ -212,7 +212,7 @@ export const Controls = controlsInjector<{ annotation: MSTAnnotation }>(
               onClickMethod();
             }}
           >
-            {`${isUpdate ? "Update" : "Submit"} and exit`}
+            {`${isUpdate ? "更新" : "提交"}并退出`}
           </Button>
         );
       };
@@ -250,7 +250,7 @@ export const Controls = controlsInjector<{ annotation: MSTAnnotation }>(
                   ) : undefined
                 }
               >
-                Submit
+                提交
               </Button>
             </Elem>
           </ButtonTooltip>,
@@ -291,7 +291,7 @@ export const Controls = controlsInjector<{ annotation: MSTAnnotation }>(
                 ) : undefined
               }
             >
-              {isUpdate ? "Update" : "Submit"}
+              {isUpdate ? "更新" : "提交"}
             </Button>
           </ButtonTooltip>
         );

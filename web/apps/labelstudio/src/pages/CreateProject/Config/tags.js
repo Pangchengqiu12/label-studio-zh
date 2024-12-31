@@ -3,7 +3,7 @@ const OBJECTS = {
     type: "Image",
     settings: {
       strokeWidth: {
-        title: "Width of region borders",
+        title: "标记边框宽度",
         type: Number,
         param: ($obj, value) =>
           $obj.$controls.forEach($control =>
@@ -12,17 +12,17 @@ const OBJECTS = {
         value: $obj => $obj.$controls[0]?.getAttribute("strokeWidth") ?? 1
       },
       zoom: {
-        title: "Allow image zoom (ctrl+wheel)",
+        title: "允许图像缩放(ctrl+鼠标滚轮)",
         type: Boolean,
         param: "zoom"
       },
       zoomControl: {
-        title: "Show controls to zoom in and out",
+        title: "显示缩放控件",
         type: Boolean,
         param: "zoomControl"
       },
       rotateControl: {
-        title: "Show controls to rotate image",
+        title: "显示旋转图像的控件",
         type: Boolean,
         param: "rotateControl"
       }

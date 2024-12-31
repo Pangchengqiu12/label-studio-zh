@@ -158,7 +158,7 @@ export const Controls = controlsInjector(
                 }
               }}
             >
-              Skip
+              跳过
             </Button>
           </ButtonTooltip>,
         );
@@ -180,7 +180,7 @@ export const Controls = controlsInjector(
                   store.submitAnnotation();
                 }}
               >
-                Submit
+                提交
               </Button>
             </Elem>
           </ButtonTooltip>,
@@ -200,7 +200,7 @@ export const Controls = controlsInjector(
                 store.updateAnnotation();
               }}
             >
-              {isUpdate ? "Update" : "Submit"}
+              {isUpdate ? "更新" : "提交"}
             </Button>
           </ButtonTooltip>
         );
