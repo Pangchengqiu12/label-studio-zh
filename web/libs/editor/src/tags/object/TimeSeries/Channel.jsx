@@ -6,7 +6,12 @@ import * as d3 from "d3";
 import Registry from "../../../core/Registry";
 import Types from "../../../core/Types";
 import { cloneNode, guidGenerator } from "../../../core/Helpers";
-import { checkD3EventLoop, getOptimalWidth, getRegionColor, sparseValues } from "./helpers";
+import {
+  checkD3EventLoop,
+  getOptimalWidth,
+  getRegionColor,
+  sparseValues
+} from "./helpers";
 import { markerSymbol } from "./symbols";
 import { errorBuilder } from "../../../core/DataValidator/ConfigValidator";
 import { TagParentMixin } from "../../../mixins/TagParentMixin";
@@ -55,7 +60,7 @@ const csMap = {
   curveradial: "curveRadial",
   curvestep: "curveStep",
   curvestepafter: "curveStepAfter",
-  curvestepbefore: "curveStepBefore",
+  curvestepbefore: "curveStepBefore"
 };
 
 const TagAttrs = types.model({
@@ -63,7 +68,10 @@ const TagAttrs = types.model({
   units: "",
   displayformat: types.optional(types.string, ".1f"),
 
-  interpolation: types.optional(types.enumeration(Object.values(csMap)), "curveStep"),
+  interpolation: types.optional(
+    types.enumeration(Object.values(csMap)),
+    "curveStep"
+  ),
 
   height: types.optional(types.string, "200"),
 
@@ -81,17 +89,19 @@ const TagAttrs = types.model({
 
   fixedscale: types.maybe(types.boolean),
 
-  column: types.string,
+  column: types.string
 });
 
 const Model = types
   .model("ChannelModel", {
-    ...(isFF(FF_DEV_3391) ? { id: types.identifier } : { id: types.optional(types.identifier, guidGenerator) }),
+    ...(isFF(FF_DEV_3391)
+      ? { id: types.identifier }
+      : { id: types.optional(types.identifier, guidGenerator) }),
     type: "channel",
     children: Types.unionArray(["channel", "view"]),
-    parentTypes: Types.tagsTypes(["TimeSeries"]),
+    parentTypes: Types.tagsTypes(["TimeSeries"])
   })
-  .views((self) => ({
+  .views(self => ({
     get columnName() {
       let column = self.column;
 
@@ -100,10 +110,15 @@ const Model = types
       }
       column = column.toLowerCase();
       return column;
-    },
+    }
   }));
 
-const ChannelModel = types.compose("ChannelModel", TagParentMixin, Model, TagAttrs);
+const ChannelModel = types.compose(
+  "ChannelModel",
+  TagParentMixin,
+  Model,
+  TagAttrs
+);
 
 class ChannelD3 extends React.Component {
   ref = React.createRef();
@@ -135,7 +150,7 @@ class ChannelD3 extends React.Component {
   height = +this.props.item.height;
 
   state = {
-    width: 840,
+    width: 840
   };
 
   changeWidth = () => {
@@ -150,16 +165,16 @@ class ChannelD3 extends React.Component {
   };
 
   getRegion = (selection, isInstant) => {
-    const [start, end] = selection.map((n) => +this.stick(n)[0]);
+    const [start, end] = selection.map(n => +this.stick(n)[0]);
 
     return { start, end: isInstant ? start : end };
   };
 
-  createBrushMovedHandler = (id) => () => {
+  createBrushMovedHandler = id => () => {
     if (checkD3EventLoop("end") || !d3.event.selection) return;
     const { ranges } = this.props;
     const { parent } = this.props.item;
-    const i = ranges.findIndex((range) => range.id === id);
+    const i = ranges.findIndex(range => range.id === id);
 
     if (i < 0) {
       console.error(`REGION ${id} was not found`);
@@ -184,7 +199,7 @@ class ChannelD3 extends React.Component {
   newBrushHandler = () => {
     const {
       ranges,
-      item: { parent },
+      item: { parent }
     } = this.props;
 
     const activeStates = parent?.activeStates();
@@ -209,8 +224,8 @@ class ChannelD3 extends React.Component {
         // 1st click - store the data
         this.newRegion = {
           range: this.getRegion([x, x]),
-          states: activeStates.map((s) => cloneNode(s)),
-          x,
+          states: activeStates.map(s => cloneNode(s)),
+          x
         };
         // clear it in 300ms if there no 2nd click
         this.newRegionTimer = setTimeout(() => {
@@ -222,8 +237,8 @@ class ChannelD3 extends React.Component {
       // select regions on this coords consequentially one after another
       // unselect regions after the last one
       const value = this.x.invert(x);
-      const regions = ranges.filter((r) => r.start <= value && r.end >= value);
-      const nextIndex = regions.findIndex((r) => r.selected) + 1;
+      const regions = ranges.filter(r => r.start <= value && r.end >= value);
+      const nextIndex = regions.findIndex(r => r.selected) + 1;
       const region = regions[nextIndex];
 
       if (region) {
@@ -236,10 +251,13 @@ class ChannelD3 extends React.Component {
     const region = this.getRegion(d3.event.selection);
 
     this.brushCreator.move(this.gCreator, null);
-    const additionalSelection = d3.event.sourceEvent.ctrlKey || d3.event.sourceEvent.metaKey;
+    const additionalSelection =
+      d3.event.sourceEvent.ctrlKey || d3.event.sourceEvent.metaKey;
 
     if (additionalSelection || !statesSelected || readonly) {
-      const regions = ranges.filter((r) => r.start >= region.start && r.end <= region.end);
+      const regions = ranges.filter(
+        r => r.start >= region.start && r.end <= region.end
+      );
 
       if (additionalSelection) {
         parent?.annotation.extendSelectionWith(regions);
@@ -258,7 +276,7 @@ class ChannelD3 extends React.Component {
     const { item } = this.props;
     const extent = [
       [0, 0],
-      [width, height],
+      [width, height]
     ];
     const managerBrush = d3.brushX().extent(extent);
     const x = this.x;
@@ -267,7 +285,9 @@ class ChannelD3 extends React.Component {
       this.gBrushes.selectAll(".brush").remove();
     }
 
-    const brushSelection = this.gBrushes.selectAll(".brush").data(ranges, (r) => r.id);
+    const brushSelection = this.gBrushes
+      .selectAll(".brush")
+      .data(ranges, r => r.id);
     const createHandler = this.createBrushMovedHandler;
     const updateTracker = this.updateTracker;
     const getRegion = this.getRegion;
@@ -277,16 +297,19 @@ class ChannelD3 extends React.Component {
       .enter()
       .append("g")
       .attr("class", "brush")
-      .attr("id", (r) => `brush_${item.id}_${r.id}`)
-      .each(function (r) {
+      .attr("id", r => `brush_${item.id}_${r.id}`)
+      .each(function(r) {
         const group = d3.select(this);
         const brush = d3.brushX().extent(extent);
 
-        brush.on("brush", function () {
+        brush.on("brush", function() {
           if (checkD3EventLoop("brush")) return;
           const sticked = getRegion(d3.event.selection, r.instant);
 
-          managerBrush.move(group, [x(sticked.start), x(sticked.end) + r.instant * 0.5]);
+          managerBrush.move(group, [
+            x(sticked.start),
+            x(sticked.end) + r.instant * 0.5
+          ]);
           updateTracker(d3.mouse(this)[0]);
         });
         brush.on("end", createHandler(r.id));
@@ -312,7 +335,7 @@ class ChannelD3 extends React.Component {
         }
       })
       .merge(brushSelection)
-      .each(function (r) {
+      .each(function(r) {
         const group = d3.select(this);
         const selection = group.selectAll(".selection");
 
@@ -357,9 +380,9 @@ class ChannelD3 extends React.Component {
       .brushX()
       .extent([
         [0, 0],
-        [this.state.width, this.height],
+        [this.state.width, this.height]
       ])
-      .on("brush", function () {
+      .on("brush", function() {
         if (checkD3EventLoop("brush") || !d3.event.selection) return;
         const sticked = getRegion(d3.event.selection);
 
@@ -384,9 +407,13 @@ class ChannelD3 extends React.Component {
     this.trackerX = dataX;
     this.tracker.attr("transform", `translate(${this.x(dataX) + 0.5},0)`);
     this.trackerTime.text(
-      `${this.formatTime(dataX)}${brushWidth === 0 ? "" : ` [${this.formatDuration(brushWidth)}]`}`,
+      `${this.formatTime(dataX)}${
+        brushWidth === 0 ? "" : ` [${this.formatDuration(brushWidth)}]`
+      }`
     );
-    this.trackerValue.text(`${this.formatValue(dataY)} ${this.props.item.units}`);
+    this.trackerValue.text(
+      `${this.formatValue(dataY)} ${this.props.item.units}`
+    );
     this.trackerPoint.attr("cy", this.y(dataY));
     this.tracker.attr("text-anchor", screenX > width - 100 ? "end" : "start");
   };
@@ -395,7 +422,10 @@ class ChannelD3 extends React.Component {
     const updateTracker = this.updateTracker;
 
     this.tracker = this.main.append("g").style("pointer-events", "none");
-    this.trackerValue = this.tracker.append("text").attr("font-size", 10).attr("fill", "#666");
+    this.trackerValue = this.tracker
+      .append("text")
+      .attr("font-size", 10)
+      .attr("fill", "#666");
     this.trackerTime = this.tracker
       .append("text")
       .attr("y", this.height - 1)
@@ -407,7 +437,11 @@ class ChannelD3 extends React.Component {
       .attr("r", 3)
       .attr("stroke", "red")
       .attr("fill", "none");
-    this.tracker.append("line").attr("y1", this.height).attr("y2", 0).attr("stroke", "#666");
+    this.tracker
+      .append("line")
+      .attr("y1", this.height)
+      .attr("y2", 0)
+      .attr("stroke", "#666");
 
     function onHover() {
       updateTracker(d3.mouse(this)[0]);
@@ -437,12 +471,12 @@ class ChannelD3 extends React.Component {
         d3
           .axisBottom(this.x)
           .ticks(width / 80)
-          .tickSize(tickSize + 4),
+          .tickSize(tickSize + 4)
       )
-      .call((g) => g.selectAll(".domain").remove())
+      .call(g => g.selectAll(".domain").remove())
       // @todo `clone is not a function` wtf?
       // .call(g => g.selectAll(".tick line").clone().attr("y1", 18).attr("y2", 22));
-      .call((g) =>
+      .call(g =>
         g
           .selectAll(".tick")
           .attr("stroke-opacity", 0.2)
@@ -453,7 +487,7 @@ class ChannelD3 extends React.Component {
           .attr("class", "bottom")
           .attr("stroke", "currentColor")
           .attr("y1", tickSize + 16)
-          .attr("y2", tickSize + margin.bottom),
+          .attr("y2", tickSize + margin.bottom)
       );
   };
 
@@ -468,9 +502,14 @@ class ChannelD3 extends React.Component {
     if (!g.size()) {
       g = this.main.append("g").attr("class", "yaxis");
     }
-    g.call(d3.axisLeft(this.y).tickFormat(this.formatValue).tickSize(3))
-      .call((g) => g.select(".domain").remove())
-      .call((g) =>
+    g.call(
+      d3
+        .axisLeft(this.y)
+        .tickFormat(this.formatValue)
+        .tickSize(3)
+    )
+      .call(g => g.select(".domain").remove())
+      .call(g =>
         g
           .append("text")
           .attr("class", "title")
@@ -479,7 +518,7 @@ class ChannelD3 extends React.Component {
           .attr("y", 0)
           .attr("fill", "currentColor")
           .attr("text-anchor", "end")
-          .text(this.props.item.units),
+          .text(this.props.item.units)
       );
   };
 
@@ -493,7 +532,7 @@ class ChannelD3 extends React.Component {
       if (!e.ctrlKey && !e.metaKey) return;
       e.preventDefault();
       const { range } = this.props;
-      const indices = range.map((r) => d3.bisectRight(times, r));
+      const indices = range.map(r => d3.bisectRight(times, r));
       const MAX_POINTS_ON_SCREEN = 10;
       const [x] = d3.mouse(d3.event.target);
       const width = this.x.range()[1];
@@ -506,7 +545,7 @@ class ChannelD3 extends React.Component {
       const shift = range[1] - range[0];
       const zoomed = [
         Math.max(+this.extent[0], +range[0] + (shift * scale * x) / width),
-        Math.min(+this.extent[1], range[1] - shift * scale * (1 - x / width)),
+        Math.min(+this.extent[1], range[1] - shift * scale * (1 - x / width))
       ];
 
       upd(zoomed, scale);
@@ -519,7 +558,13 @@ class ChannelD3 extends React.Component {
     if (!this.ref.current) return;
 
     const { data, item, range, time, column } = this.props;
-    const { isDate, formatTime, formatDuration, margin, slicesCount } = item.parent;
+    const {
+      isDate,
+      formatTime,
+      formatDuration,
+      margin,
+      slicesCount
+    } = item.parent;
     const height = this.height;
 
     this.zoomStep = slicesCount;
@@ -536,10 +581,10 @@ class ChannelD3 extends React.Component {
     let originalTimes;
 
     if (isFF(FF_LSDV_4881)) {
-      originalSeries = series.filter((x) => {
+      originalSeries = series.filter(x => {
         return x[column] !== null;
       });
-      originalTimes = originalSeries.map((x) => {
+      originalTimes = originalSeries.map(x => {
         return x[time];
       });
     }
@@ -549,7 +594,7 @@ class ChannelD3 extends React.Component {
       series = this.optimizedSeries;
     }
 
-    series = series.filter((x) => {
+    series = series.filter(x => {
       return x[column] !== null;
     });
 
@@ -557,21 +602,23 @@ class ChannelD3 extends React.Component {
       this.optimizedSeries = series;
     }
 
-    const times = series.map((x) => {
+    const times = series.map(x => {
       return x[time];
     });
 
-    const values = series.map((x) => {
+    const values = series.map(x => {
       return x[column];
     });
 
     if (!values) {
-      const names = Object.keys(data).filter((name) => name !== time);
+      const names = Object.keys(data).filter(name => name !== time);
       const message = `\`${column}\` not found in data. Available columns: ${names.join(
-        ", ",
+        ", "
       )}. For headless csv you can use column index`;
 
-      getRoot(item).annotationStore.addErrors([errorBuilder.generalError(message)]);
+      getRoot(item).annotationStore.addErrors([
+        errorBuilder.generalError(message)
+      ]);
       return;
     }
 
@@ -586,7 +633,9 @@ class ChannelD3 extends React.Component {
     this.formatDuration = formatDuration;
 
     const offsetWidth = this.ref.current.offsetWidth;
-    const width = offsetWidth ? offsetWidth - margin.left - margin.right : this.state.width;
+    const width = offsetWidth
+      ? offsetWidth - margin.left - margin.right
+      : this.state.width;
     // intention direct assignment to avoid rerender and correct initialization
     // eslint-disable-next-line react/no-direct-mutation-state
 
@@ -606,13 +655,16 @@ class ChannelD3 extends React.Component {
       .domain(d3.extent(values))
       .range([height - margin.max, margin.min]);
 
-    const stick = (screenX) => {
+    const stick = screenX => {
       const dataX = x.invert(screenX);
       const stickTimes = isFF(FF_LSDV_4881) ? originalTimes : times;
       let i = d3.bisectRight(stickTimes, dataX, 0, stickTimes.length - 1);
 
       if (stickTimes[i] - dataX > dataX - stickTimes[i - 1]) i--;
-      return [stickTimes[i], isFF(FF_LSDV_4881) ? originalSeries[i][column] : values[i]];
+      return [
+        stickTimes[i],
+        isFF(FF_LSDV_4881) ? originalSeries[i][column] : values[i]
+      ];
     };
 
     this.x = x;
@@ -622,20 +674,25 @@ class ChannelD3 extends React.Component {
 
     this.line = d3
       .line()
-      .y((d) => this.y(d[column]))
-      .x((d) => this.plotX(d[time]));
+      .y(d => this.y(d[column]))
+      .x(d => this.plotX(d[time]));
 
     this.lineSlice = d3
       .line()
-      .defined((d) => d[time] >= range[0] && d[time] <= range[1])
-      .y((d) => this.y(d[column]))
-      .x((d) => this.x(d[time]));
+      .defined(d => d[time] >= range[0] && d[time] <= range[1])
+      .y(d => this.y(d[column]))
+      .x(d => this.x(d[time]));
 
     //////////////////////////////////
     const main = d3
       .select(this.ref.current)
       .append("svg")
-      .attr("viewBox", [0, 0, width + margin.left + margin.right, height + margin.top + margin.bottom])
+      .attr("viewBox", [
+        0,
+        0,
+        width + margin.left + margin.right,
+        height + margin.top + margin.bottom
+      ])
       .style("display", "block")
       .append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
@@ -673,9 +730,14 @@ class ChannelD3 extends React.Component {
 
     this.main = main;
 
-    const pathContainer = main.append("g").attr("clip-path", `url("#${clipPathId}")`);
+    const pathContainer = main
+      .append("g")
+      .attr("clip-path", `url("#${clipPathId}")`);
 
-    this.path = pathContainer.append("path").datum(series).attr("d", this.line);
+    this.path = pathContainer
+      .append("path")
+      .datum(series)
+      .attr("d", this.line);
     // to render different zoomed slices of path
     this.path2 = pathContainer.append("path");
 
@@ -697,7 +759,10 @@ class ChannelD3 extends React.Component {
     this.initZoom();
 
     // We initially generate a SVG group to keep our brushes' DOM elements in:
-    this.gBrushes = main.append("g").attr("class", "brushes").attr("clip-path", `url("#${clipPathId}")`);
+    this.gBrushes = main
+      .append("g")
+      .attr("class", "brushes")
+      .attr("clip-path", `url("#${clipPathId}")`);
 
     this.renderBrushes(this.props.ranges);
 
@@ -713,8 +778,14 @@ class ChannelD3 extends React.Component {
     const current = this.x.range();
     const all = this.plotX.domain().map(this.x);
     const scale = (all[1] - all[0]) / (current[1] - current[0]);
-    const left = Math.max(0, Math.floor((this.zoomStep * (current[0] - all[0])) / (all[1] - all[0])));
-    const right = Math.max(0, Math.floor((this.zoomStep * (current[1] - all[0])) / (all[1] - all[0])));
+    const left = Math.max(
+      0,
+      Math.floor((this.zoomStep * (current[0] - all[0])) / (all[1] - all[0]))
+    );
+    const right = Math.max(
+      0,
+      Math.floor((this.zoomStep * (current[1] - all[0])) / (all[1] - all[0]))
+    );
     const translate = all[0] - current[0];
 
     let translateY = 0;
@@ -722,7 +793,8 @@ class ChannelD3 extends React.Component {
     const originY = this.y.range()[0];
     const { item } = this.props;
     // overwrite parent's
-    const fixedscale = item.fixedscale === undefined ? item.parent?.fixedscale : item.fixedscale;
+    const fixedscale =
+      item.fixedscale === undefined ? item.parent?.fixedscale : item.fixedscale;
 
     if (item.timerange) {
       const timerange = item.timerange.split(",").map(Number);
@@ -777,7 +849,10 @@ class ChannelD3 extends React.Component {
     }
 
     if (this.useOptimizedData) {
-      this.path.attr("transform", `translate(${translate} ${translateY}) scale(${scale} ${scaleY})`);
+      this.path.attr(
+        "transform",
+        `translate(${translate} ${translateY}) scale(${scale} ${scaleY})`
+      );
       this.path.attr("transform-origin", `left ${originY}`);
       this.path2.attr("d", "");
     } else {
@@ -812,7 +887,12 @@ class ChannelD3 extends React.Component {
       const height = this.height;
       const svg = d3.select(this.ref.current).selectAll("svg");
 
-      svg.attr("viewBox", [0, 0, width + margin.left + margin.right, height + margin.top + margin.bottom]);
+      svg.attr("viewBox", [
+        0,
+        0,
+        width + margin.left + margin.right,
+        height + margin.top + margin.bottom
+      ]);
       this.x.range([0, width]);
       this.renderBrushCreator();
       svg.selectAll("clipPath rect").attr("width", width);
@@ -832,8 +912,16 @@ class ChannelD3 extends React.Component {
   }
 
   render() {
-    this.props.ranges.map((r) =>
-      fixMobxObserve(r.start, r.end, r.selected, r.inSelection, r.highlighted, r.hidden, r.style?.fillcolor),
+    this.props.ranges.map(r =>
+      fixMobxObserve(
+        r.start,
+        r.end,
+        r.selected,
+        r.inSelection,
+        r.highlighted,
+        r.hidden,
+        r.style?.fillcolor
+      )
     );
     fixMobxObserve(this.props.range.map(Number));
 

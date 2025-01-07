@@ -774,7 +774,6 @@ export default observer(
       if (e.evt) {
         const { item } = this.props;
         const stage = item.stageRef;
-
         item.handleZoom(e.evt.deltaY, stage.getPointerPosition());
       }
     };
@@ -822,6 +821,7 @@ export default observer(
 
         if (this.props.item.naturalWidth <= 1) return;
         if (this.lastOffsetWidth === offsetWidth && this.lastOffsetHeight === offsetHeight) return;
+        console.log(offsetWidth,offsetHeight,2222)
 
         this.props.item.onResize(offsetWidth, offsetHeight, true);
         this.lastOffsetWidth = offsetWidth;

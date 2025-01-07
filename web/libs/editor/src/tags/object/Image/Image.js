@@ -22,7 +22,7 @@ import {
   FF_LSDV_4583_6,
   FF_LSDV_4711,
   FF_ZOOM_OPTIM,
-  isFF,
+  isFF
 } from "../../../utils/feature-flags";
 import { guidGenerator } from "../../../utils/unique";
 import { clamp, isDefined } from "../../../utils/utilities";
@@ -30,7 +30,11 @@ import ObjectBase from "../Base";
 import { DrawingRegion } from "./DrawingRegion";
 import { ImageEntityMixin } from "./ImageEntityMixin";
 import { ImageSelection } from "./ImageSelection";
-import { RELATIVE_STAGE_HEIGHT, RELATIVE_STAGE_WIDTH, SNAP_TO_PIXEL_MODE } from "../../../components/ImageView/Image";
+import {
+  RELATIVE_STAGE_HEIGHT,
+  RELATIVE_STAGE_WIDTH,
+  SNAP_TO_PIXEL_MODE
+} from "../../../components/ImageView/Image";
 import MultiItemObjectBase from "../MultiItemObjectBase";
 
 const IMAGE_PRELOAD_COUNT = 3;
@@ -120,11 +124,23 @@ const TagAttrs = types.model({
   // this property is just to turn lazyload off to e2e tests
   lazyoff: types.optional(types.boolean, false),
 
-  horizontalalignment: types.optional(types.enumeration(["left", "center", "right"]), "left"),
-  verticalalignment: types.optional(types.enumeration(["top", "center", "bottom"]), "top"),
-  defaultzoom: types.optional(types.enumeration(["auto", "original", "fit"]), "fit"),
+  horizontalalignment: types.optional(
+    types.enumeration(["left", "center", "right"]),
+    "left"
+  ),
+  verticalalignment: types.optional(
+    types.enumeration(["top", "center", "bottom"]),
+    "top"
+  ),
+  defaultzoom: types.optional(
+    types.enumeration(["auto", "original", "fit"]),
+    "fit"
+  ),
 
-  crossorigin: types.optional(types.enumeration(["none", "anonymous", "use-credentials"]), "none"),
+  crossorigin: types.optional(
+    types.enumeration(["none", "anonymous", "use-credentials"]),
+    "none"
+  )
 });
 
 const IMAGE_CONSTANTS = {
@@ -138,7 +154,7 @@ const IMAGE_CONSTANTS = {
   polygonlabels: "polygonlabels",
   brushlabels: "brushlabels",
   brushModel: "BrushModel",
-  ellipselabels: "ellipselabels",
+  ellipselabels: "ellipselabels"
 };
 
 const Model = types
@@ -164,21 +180,30 @@ const Model = types
      * brush for Image Segmentation
      * eraser for Image Segmentation
      */
-    mode: types.optional(types.enumeration(["drawing", "viewing", "brush", "eraser"]), "viewing"),
+    mode: types.optional(
+      types.enumeration(["drawing", "viewing", "brush", "eraser"]),
+      "viewing"
+    ),
 
     regions: types.array(
-      types.union(BrushRegionModel, RectRegionModel, EllipseRegionModel, PolygonRegionModel, KeyPointRegionModel),
-      [],
+      types.union(
+        BrushRegionModel,
+        RectRegionModel,
+        EllipseRegionModel,
+        PolygonRegionModel,
+        KeyPointRegionModel
+      ),
+      []
     ),
 
     drawingRegion: types.optional(DrawingRegion, null),
-    selectionArea: types.optional(ImageSelection, { start: null, end: null }),
+    selectionArea: types.optional(ImageSelection, { start: null, end: null })
   })
   .volatile(() => ({
     currentImage: undefined,
-    supportSuggestions: true,
+    supportSuggestions: true
   }))
-  .views((self) => ({
+  .views(self => ({
     get store() {
       return getRoot(self);
     },
@@ -226,13 +251,13 @@ const Model = types
     },
 
     get selectedRegions() {
-      return self.regs.filter((region) => region.inSelection);
+      return self.regs.filter(region => region.inSelection);
     },
 
     get selectedRegionsBBox() {
       let bboxCoords;
 
-      self.selectedRegions.forEach((region) => {
+      self.selectedRegions.forEach(region => {
         const regionBBox = region.bboxCoords;
 
         if (!regionBBox) return;
@@ -242,7 +267,7 @@ const Model = types
             left: Math.min(regionBBox?.left, bboxCoords.left),
             top: Math.min(regionBBox?.top, bboxCoords.top),
             right: Math.max(regionBBox?.right, bboxCoords.right),
-            bottom: Math.max(regionBBox?.bottom, bboxCoords.bottom),
+            bottom: Math.max(regionBBox?.bottom, bboxCoords.bottom)
           };
         } else {
           bboxCoords = regionBBox;
@@ -252,15 +277,19 @@ const Model = types
     },
 
     get regionsInSelectionArea() {
-      return self.regs.filter((region) => region.isInSelectionArea);
+      return self.regs.filter(region => region.isInSelectionArea);
     },
 
     get selectedShape() {
-      return self.regs.find((r) => r.selected);
+      return self.regs.find(r => r.selected);
     },
 
     get suggestions() {
-      return self.annotation?.regionStore.suggestions.filter((r) => r.object === self) || [];
+      return (
+        self.annotation?.regionStore.suggestions.filter(
+          r => r.object === self
+        ) || []
+      );
     },
 
     get useTransformer() {
@@ -274,7 +303,7 @@ const Model = types
         0: { x: 0, y: 0 },
         90: { x: 0, y: height },
         180: { x: width, y: height },
-        270: { x: width, y: 0 },
+        270: { x: width, y: 0 }
       }[self.rotation];
     },
 
@@ -289,7 +318,8 @@ const Model = types
     get imageCrossOrigin() {
       const value = self.crossorigin.toLowerCase();
 
-      if (isFF(FF_LSDV_4711) && (!value || value === "none")) return "anonymous";
+      if (isFF(FF_LSDV_4711) && (!value || value === "none"))
+        return "anonymous";
 
       if (!value || value === "none") {
         return null;
@@ -300,7 +330,9 @@ const Model = types
     get fillerHeight() {
       const { naturalWidth, naturalHeight } = self;
 
-      return self.isSideways ? `${(naturalWidth / naturalHeight) * 100}%` : `${(naturalHeight / naturalWidth) * 100}%`;
+      return self.isSideways
+        ? `${(naturalWidth / naturalHeight) * 100}%`
+        : `${(naturalHeight / naturalWidth) * 100}%`;
     },
 
     get zoomedPixelSize() {
@@ -309,13 +341,13 @@ const Model = types
       if (isFF(FF_DEV_3793)) {
         return {
           x: 100 / naturalWidth,
-          y: 100 / naturalHeight,
+          y: 100 / naturalHeight
         };
       }
 
       return {
         x: self.stageWidth / naturalWidth,
-        y: self.stageHeight / naturalHeight,
+        y: self.stageHeight / naturalHeight
       };
     },
 
@@ -323,7 +355,10 @@ const Model = types
       const zoomedPixelSizeX = self.zoomedPixelSize.x;
       const zoomedPixelSizeY = self.zoomedPixelSize.y;
 
-      return Math.abs(x1 - x2) < zoomedPixelSizeX / 2 && Math.abs(y1 - y2) < zoomedPixelSizeY / 2;
+      return (
+        Math.abs(x1 - x2) < zoomedPixelSizeX / 2 &&
+        Math.abs(y1 - y2) < zoomedPixelSizeY / 2
+      );
     },
 
     snapPointToPixel({ x, y }, snapMode = SNAP_TO_PIXEL_MODE.EDGE) {
@@ -334,13 +369,17 @@ const Model = types
         case SNAP_TO_PIXEL_MODE.EDGE: {
           return {
             x: Math.round(x / zoomedPixelSizeX) * zoomedPixelSizeX,
-            y: Math.round(y / zoomedPixelSizeY) * zoomedPixelSizeY,
+            y: Math.round(y / zoomedPixelSizeY) * zoomedPixelSizeY
           };
         }
         case SNAP_TO_PIXEL_MODE.CENTER: {
           return {
-            x: Math.floor(x / zoomedPixelSizeX) * zoomedPixelSizeX + zoomedPixelSizeX / 2,
-            y: Math.floor(y / zoomedPixelSizeY) * zoomedPixelSizeY + zoomedPixelSizeY / 2,
+            x:
+              Math.floor(x / zoomedPixelSizeX) * zoomedPixelSizeX +
+              zoomedPixelSizeX / 2,
+            y:
+              Math.floor(y / zoomedPixelSizeY) * zoomedPixelSizeY +
+              zoomedPixelSizeY / 2
           };
         }
       }
@@ -353,7 +392,7 @@ const Model = types
       const imageDimension = {
         original_width: currentImageEntity.naturalWidth,
         original_height: currentImageEntity.naturalHeight,
-        image_rotation: currentImageEntity.rotation,
+        image_rotation: currentImageEntity.rotation
       };
 
       if (self.multiImage && isDefined(index)) {
@@ -365,13 +404,14 @@ const Model = types
       // As the serialization also happens during region creation,
       // we have to forsee this scenario and avoid using raw result
       // as it can only be present for already created (submitter) regions
-      const useRawResult = !currentImageEntity.imageLoaded && isDefined(region._rawResult);
+      const useRawResult =
+        !currentImageEntity.imageLoaded && isDefined(region._rawResult);
 
       return useRawResult
         ? structuredClone(region._rawResult)
         : {
             ...imageDimension,
-            value,
+            value
           };
     },
 
@@ -385,7 +425,9 @@ const Model = types
     activeStates() {
       const states = self.states();
 
-      return states && states.filter((s) => s.isSelected && s.type.includes("labels"));
+      return (
+        states && states.filter(s => s.isSelected && s.type.includes("labels"))
+      );
     },
 
     controlButton() {
@@ -395,7 +437,7 @@ const Model = types
 
       let returnedControl = names[0];
 
-      names.forEach((item) => {
+      names.forEach(item => {
         if (
           item.type === IMAGE_CONSTANTS.rectanglelabels ||
           item.type === IMAGE_CONSTANTS.brushlabels ||
@@ -422,12 +464,12 @@ const Model = types
       if (self.isSideways) {
         return {
           width: self.stageHeight,
-          height: self.stageWidth,
+          height: self.stageWidth
         };
       }
       return {
         width: self.stageWidth,
-        height: self.stageHeight,
+        height: self.stageHeight
       };
     },
 
@@ -439,7 +481,7 @@ const Model = types
             : Math.round(self.naturalHeight * self.stageZoomX),
           height: isFF(FF_DEV_3377)
             ? self.naturalWidth * self.stageZoomY
-            : Math.round(self.naturalWidth * self.stageZoomY),
+            : Math.round(self.naturalWidth * self.stageZoomY)
         };
       }
 
@@ -449,7 +491,7 @@ const Model = types
           : Math.round(self.naturalWidth * self.stageZoomX),
         height: isFF(FF_DEV_3377)
           ? self.naturalHeight * self.stageZoomY
-          : Math.round(self.naturalHeight * self.stageZoomY),
+          : Math.round(self.naturalHeight * self.stageZoomY)
       };
     },
 
@@ -496,21 +538,23 @@ const Model = types
         transformOrigin: "left top",
         // We should always set some transform to make the image rendering in the same way all the time
         transform: "translate3d(0,0,0)",
-        filter: `brightness(${self.brightnessGrade}%) contrast(${self.contrastGrade}%)`,
+        filter: `brightness(${self.brightnessGrade}%) contrast(${self.contrastGrade}%)`
       };
       const imgTransform = [];
 
       if (self.zoomScale !== 1) {
         const { zoomingPositionX = 0, zoomingPositionY = 0 } = self;
 
-        imgTransform.push(`translate3d(${zoomingPositionX}px,${zoomingPositionY}px, 0)`);
+        imgTransform.push(
+          `translate3d(${zoomingPositionX}px,${zoomingPositionY}px, 0)`
+        );
       }
 
       if (self.rotation) {
         const translate = {
           90: "0, -100%",
           180: "-100%, -100%",
-          270: "-100%, 0",
+          270: "-100%, 0"
         };
 
         // there is a top left origin already set for zoom; so translate+rotate
@@ -526,14 +570,26 @@ const Model = types
 
     get maxScale() {
       return self.isSideways
-        ? Math.min(self.containerWidth / self.naturalHeight, self.containerHeight / self.naturalWidth)
-        : Math.min(self.containerWidth / self.naturalWidth, self.containerHeight / self.naturalHeight);
+        ? Math.min(
+            self.containerWidth / self.naturalHeight,
+            self.containerHeight / self.naturalWidth
+          )
+        : Math.min(
+            self.containerWidth / self.naturalWidth,
+            self.containerHeight / self.naturalHeight
+          );
     },
 
     get coverScale() {
       return self.isSideways
-        ? Math.max(self.containerWidth / self.naturalHeight, self.containerHeight / self.naturalWidth)
-        : Math.max(self.containerWidth / self.naturalWidth, self.containerHeight / self.naturalHeight);
+        ? Math.max(
+            self.containerWidth / self.naturalHeight,
+            self.containerHeight / self.naturalWidth
+          )
+        : Math.max(
+            self.containerWidth / self.naturalWidth,
+            self.containerHeight / self.naturalHeight
+          );
     },
 
     get viewPortBBoxCoords() {
@@ -542,7 +598,8 @@ const Model = types
       const leftOffset = -self.zoomingPositionX / self.zoomScale;
       const topOffset = -self.zoomingPositionY / self.zoomScale;
       const rightOffset = self.stageComponentSize.width - (leftOffset + width);
-      const bottomOffset = self.stageComponentSize.height - (topOffset + height);
+      const bottomOffset =
+        self.stageComponentSize.height - (topOffset + height);
       const offsets = [leftOffset, topOffset, rightOffset, bottomOffset];
 
       if (self.isSideways) {
@@ -564,34 +621,36 @@ const Model = types
         right: left + width,
         bottom: top + height,
         width,
-        height,
+        height
       };
-    },
+    }
   }))
 
   // actions for the tools
-  .actions((self) => {
+  .actions(self => {
     const manager = ToolsManager.getInstance({ name: self.name });
     const env = { manager, control: self, object: self };
 
     function createImageEntities() {
       if (!self.store.task) return;
 
-      const parsedValue = self.multiImage ? self.parsedValueList : self.parsedValue;
+      const parsedValue = self.multiImage
+        ? self.parsedValueList
+        : self.parsedValue;
 
       if (Array.isArray(parsedValue)) {
         parsedValue.forEach((src, index) => {
           self.imageEntities.push({
             id: `${self.name}#${index}`,
             src,
-            index,
+            index
           });
         });
       } else {
         self.imageEntities.push({
           id: `${self.name}#0`,
           src: parsedValue,
-          index: 0,
+          index: 0
         });
       }
 
@@ -599,15 +658,20 @@ const Model = types
     }
 
     function afterAttach() {
-      if (self.selectioncontrol) manager.addTool("MoveTool", Tools.Selection.create({}, env));
+      if (self.selectioncontrol)
+        manager.addTool("MoveTool", Tools.Selection.create({}, env));
 
-      if (self.zoomcontrol) manager.addTool("ZoomPanTool", Tools.Zoom.create({}, env));
+      if (self.zoomcontrol)
+        manager.addTool("ZoomPanTool", Tools.Zoom.create({}, env));
 
-      if (self.brightnesscontrol) manager.addTool("BrightnessTool", Tools.Brightness.create({}, env));
+      if (self.brightnesscontrol)
+        manager.addTool("BrightnessTool", Tools.Brightness.create({}, env));
 
-      if (self.contrastcontrol) manager.addTool("ContrastTool", Tools.Contrast.create({}, env));
+      if (self.contrastcontrol)
+        manager.addTool("ContrastTool", Tools.Contrast.create({}, env));
 
-      if (self.rotatecontrol) manager.addTool("RotateTool", Tools.Rotate.create({}, env));
+      if (self.rotatecontrol)
+        manager.addTool("RotateTool", Tools.Rotate.create({}, env));
 
       createImageEntities();
     }
@@ -627,10 +691,10 @@ const Model = types
     return {
       afterAttach,
       getToolsManager,
-      afterResultCreated,
+      afterResultCreated
     };
   })
-  .extend((self) => {
+  .extend(self => {
     let skipInteractions = false;
 
     return {
@@ -651,10 +715,11 @@ const Model = types
           }
           const manager = self.getToolsManager();
 
-          const isPanning = manager.findSelectedTool()?.toolName === "ZoomPanTool";
+          const isPanning =
+            manager.findSelectedTool()?.toolName === "ZoomPanTool";
 
           return skipInteractions || isPanning;
-        },
+        }
       },
       actions: {
         setSkipInteractions(value) {
@@ -664,14 +729,16 @@ const Model = types
           const currentTool = self.getToolsManager().findSelectedTool();
 
           if (currentTool?.shouldSkipInteractions) {
-            return self.setSkipInteractions(currentTool.shouldSkipInteractions(e));
+            return self.setSkipInteractions(
+              currentTool.shouldSkipInteractions(e)
+            );
           }
           self.setSkipInteractions(e.evt && (e.evt.metaKey || e.evt.ctrlKey));
-        },
-      },
+        }
+      }
     };
   })
-  .actions((self) => ({
+  .actions(self => ({
     freezeHistory() {
       //self.annotation.history.freeze();
     },
@@ -689,7 +756,7 @@ const Model = types
         from_name: controlTag,
         to_name: self,
         type: control.resultType,
-        value: resultValue,
+        value: resultValue
       };
 
       const areaRaw = {
@@ -698,7 +765,7 @@ const Model = types
         ...areaValue,
         results: [result],
         dynamic,
-        item_index: self.currentImage,
+        item_index: self.currentImage
       };
 
       self.drawingRegion = areaRaw;
@@ -767,16 +834,27 @@ const Model = types
       self.currentImageEntity.preload();
 
       if (self.multiImage) {
-        const [currentIndex, length] = [self.currentImage, self.imageEntities.length];
-        const prevSliceIndex = clamp(currentIndex - IMAGE_PRELOAD_COUNT, 0, currentIndex);
-        const nextSliceIndex = clamp(currentIndex + 1 + IMAGE_PRELOAD_COUNT, currentIndex, length - 1);
+        const [currentIndex, length] = [
+          self.currentImage,
+          self.imageEntities.length
+        ];
+        const prevSliceIndex = clamp(
+          currentIndex - IMAGE_PRELOAD_COUNT,
+          0,
+          currentIndex
+        );
+        const nextSliceIndex = clamp(
+          currentIndex + 1 + IMAGE_PRELOAD_COUNT,
+          currentIndex,
+          length - 1
+        );
 
         const images = [
           ...self.imageEntities.slice(prevSliceIndex, currentIndex),
-          ...self.imageEntities.slice(currentIndex + 1, nextSliceIndex),
+          ...self.imageEntities.slice(currentIndex + 1, nextSliceIndex)
         ];
 
-        images.forEach((imageEntity) => {
+        images.forEach(imageEntity => {
           imageEntity.preload();
         });
       }
@@ -829,7 +907,10 @@ const Model = types
         // zoomScale scales image above maxScale, so scale the rest of stage the same way
         const z = Math.min(maxScale * self.zoomScale, coverScale);
 
-        if (self.containerWidth / self.naturalWidth > self.containerHeight / self.naturalHeight) {
+        if (
+          self.containerWidth / self.naturalWidth >
+          self.containerHeight / self.naturalHeight
+        ) {
           self.stageZoomX = z;
           self.stageZoomY = self.stageZoom;
         } else {
@@ -852,7 +933,7 @@ const Model = types
           width: self.stageWidth,
           height: self.stageHeight,
           naturalWidth: self.naturalWidth,
-          naturalHeight: self.naturalHeight,
+          naturalHeight: self.naturalHeight
         });
       }
     },
@@ -864,7 +945,7 @@ const Model = types
 
       const [minX, minY] = [
         width - self.stageComponentSize.width * self.zoomScale,
-        height - self.stageComponentSize.height * self.zoomScale,
+        height - self.stageComponentSize.height * self.zoomScale
       ];
 
       self.zoomingPositionX = clamp(x, minX, 0);
@@ -879,7 +960,10 @@ const Model = types
         ? [self.canvasSize.width, self.canvasSize.height]
         : [self.containerWidth, self.containerHeight];
 
-      self.setZoomPosition((containerWidth - width * zoomScale) / 2, (containerHeight - height * zoomScale) / 2);
+      self.setZoomPosition(
+        (containerWidth - width * zoomScale) / 2,
+        (containerHeight - height * zoomScale) / 2
+      );
     },
 
     sizeToFit() {
@@ -907,7 +991,14 @@ const Model = types
       self.resetZoomPositionToCenter();
     },
 
-    handleZoom(val, mouseRelativePos = { x: self.canvasSize.width / 2, y: self.canvasSize.height / 2 }) {
+    handleZoom(
+      val,
+      mouseRelativePos = {
+        x: self.canvasSize.width / 2,
+        y: self.canvasSize.height / 2
+      }
+    ) {
+      console.log("handleZoom", self);
       if (val) {
         let zoomScale = self.currentZoom;
 
@@ -930,7 +1021,7 @@ const Model = types
 
         const mouseAbsolutePos = {
           x: (mouseRelativePos.x - self.zoomingPositionX) / stageScale,
-          y: (mouseRelativePos.y - self.zoomingPositionY) / stageScale,
+          y: (mouseRelativePos.y - self.zoomingPositionY) / stageScale
         };
 
         self.setZoom(zoomScale);
@@ -938,8 +1029,11 @@ const Model = types
         stageScale = self.zoomScale;
 
         const zoomingPosition = {
-          x: -(mouseAbsolutePos.x - mouseRelativePos.x / stageScale) * stageScale,
-          y: -(mouseAbsolutePos.y - mouseRelativePos.y / stageScale) * stageScale,
+          x:
+            -(mouseAbsolutePos.x - mouseRelativePos.x / stageScale) *
+            stageScale,
+          y:
+            -(mouseAbsolutePos.y - mouseRelativePos.y / stageScale) * stageScale
         };
 
         self.setZoomPosition(zoomingPosition.x, zoomingPosition.y);
@@ -999,7 +1093,7 @@ const Model = types
           self.zoomingPositionY * ratioK,
           self.stageComponentSize.height -
             self.zoomingPositionX * ratioK -
-            self.stageComponentSize.height * self.zoomScale,
+            self.stageComponentSize.height * self.zoomScale
         );
       }
       if (degree === 90) {
@@ -1007,7 +1101,7 @@ const Model = types
           self.stageComponentSize.width -
             self.zoomingPositionY * ratioK -
             self.stageComponentSize.width * self.zoomScale,
-          self.zoomingPositionX * ratioK,
+          self.zoomingPositionX * ratioK
         );
       }
 
@@ -1046,8 +1140,10 @@ const Model = types
         const changeRatio = zoomChangeRatio * scaleChangeRatio;
 
         self.setZoomPosition(
-          self.zoomingPositionX * changeRatio + (self.canvasSize.width / 2 - (prevWidth / 2) * changeRatio),
-          self.zoomingPositionY * changeRatio + (self.canvasSize.height / 2 - (prevHeight / 2) * changeRatio),
+          self.zoomingPositionX * changeRatio +
+            (self.canvasSize.width / 2 - (prevWidth / 2) * changeRatio),
+          self.zoomingPositionY * changeRatio +
+            (self.canvasSize.height / 2 - (prevHeight / 2) * changeRatio)
         );
       }
 
@@ -1057,22 +1153,46 @@ const Model = types
         height: self.stageHeight,
         naturalWidth: self.naturalWidth,
         naturalHeight: self.naturalHeight,
-        userResize,
+        userResize
       });
     },
 
-    _updateRegionsSizes({ width, height, naturalWidth, naturalHeight, userResize }) {
+    _updateRegionsSizes({
+      width,
+      height,
+      naturalWidth,
+      naturalHeight,
+      userResize
+    }) {
       const _historyLength = self.annotation?.history?.history?.length;
 
       self.annotation.history.freeze();
 
-      self.regions.forEach((shape) => {
-        shape.updateImageSize(width / naturalWidth, height / naturalHeight, width, height, userResize);
+      self.regions.forEach(shape => {
+        shape.updateImageSize(
+          width / naturalWidth,
+          height / naturalHeight,
+          width,
+          height,
+          userResize
+        );
       });
-      self.regs.forEach((shape) => {
-        shape.updateImageSize(width / naturalWidth, height / naturalHeight, width, height, userResize);
+      self.regs.forEach(shape => {
+        shape.updateImageSize(
+          width / naturalWidth,
+          height / naturalHeight,
+          width,
+          height,
+          userResize
+        );
       });
-      self.drawingRegion?.updateImageSize(width / naturalWidth, height / naturalHeight, width, height, userResize);
+      self.drawingRegion?.updateImageSize(
+        width / naturalWidth,
+        height / naturalHeight,
+        width,
+        height,
+        userResize
+      );
 
       setTimeout(self.annotation.history.unfreeze, 0);
 
@@ -1113,7 +1233,9 @@ const Model = types
         labelStates = self.activeStates() || [];
       } else {
         // there is should be at least one state selected for *labels object
-        labelStates = (self.states() || []).filter((s) => s.type.includes("labels"));
+        labelStates = (self.states() || []).filter(s =>
+          s.type.includes("labels")
+        );
       }
       const selectedStates = self.getAvailableStates();
 
@@ -1143,12 +1265,12 @@ const Model = types
       const y = self.canvasToInternalY(canvasY);
 
       self.getToolsManager().event(name, ev.evt || ev, x, y, canvasX, canvasY);
-    },
+    }
   }));
 
 const CoordsCalculations = types
   .model()
-  .actions((self) => ({
+  .actions(self => ({
     // convert screen coords to image coords considering zoom
     fixZoomedCoords([x, y]) {
       if (!self.stageRef) {
@@ -1156,7 +1278,11 @@ const CoordsCalculations = types
       }
 
       // good official way, but maybe a bit slower and with repeating cloning
-      const p = self.stageRef.getAbsoluteTransform().copy().invert().point({ x, y });
+      const p = self.stageRef
+        .getAbsoluteTransform()
+        .copy()
+        .invert()
+        .point({ x, y });
 
       return [p.x, p.y];
     },
@@ -1186,19 +1312,21 @@ const CoordsCalculations = types
      * @return {PointFn} outer function do some math with screen coords
      */
     fixForZoom(fn) {
-      return (p) => this.fixForZoomWrapper(p, fn);
+      return p => this.fixForZoomWrapper(p, fn);
     },
     fixForZoomWrapper(p, fn) {
       const asArray = p.x === undefined;
       const [x, y] = self.fixZoomedCoords(asArray ? p : [p.x, p.y]);
       const modified = fn(asArray ? [x, y] : { x, y });
-      const zoomed = self.zoomOriginalCoords(asArray ? modified : [modified.x, modified.y]);
+      const zoomed = self.zoomOriginalCoords(
+        asArray ? modified : [modified.x, modified.y]
+      );
 
       return asArray ? zoomed : { x: zoomed[0], y: zoomed[1] };
-    },
+    }
   }))
   // putting this transforms to views forces other getters to be recalculated on resize
-  .views((self) => ({
+  .views(self => ({
     // helps to calculate rotation because internal coords are square and real one usually aren't
     get whRatio() {
       // don't need this for absolute coords
@@ -1222,7 +1350,7 @@ const CoordsCalculations = types
 
     internalToCanvasY(n) {
       return (n / RELATIVE_STAGE_HEIGHT) * self.stageHeight;
-    },
+    }
   }));
 
 // mock coords calculations to transparently pass coords with FF 3793 off
@@ -1238,7 +1366,7 @@ const AbsoluteCoordsCalculations = CoordsCalculations.views(() => ({
   },
   internalToCanvasY(n) {
     return n;
-  },
+  }
 }));
 
 const ImageModel = types.compose(
@@ -1250,7 +1378,7 @@ const ImageModel = types.compose(
   IsReadyWithDepsMixin,
   ImageEntityMixin,
   Model,
-  isFF(FF_DEV_3793) ? CoordsCalculations : AbsoluteCoordsCalculations,
+  isFF(FF_DEV_3793) ? CoordsCalculations : AbsoluteCoordsCalculations
 );
 
 const HtxImage = inject("store")(ImageView);
